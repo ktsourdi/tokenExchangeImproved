@@ -23,6 +23,8 @@ contract TokenSwap {
     IERC20 public token3;
 
     mapping(IERC20 => uint256) public rates;
+
+     address private owner;
     
 
     //when deploying pass in owner 1 and owner 2
@@ -36,9 +38,10 @@ contract TokenSwap {
             token1 = IERC20(_token1);
             token2 = IERC20(_token2);
             token3 = IERC20(_token3);
-            rates[token1] = 1; 
-            rates[token2] = 10; 
-            rates[token3] = 100;
+            rates[token1] = 1000000000000000000; 
+            rates[token2] = 10000000000000000000; 
+            rates[token3] = 100000000000000000000;
+            owner = msg.sender;
         }
         
 
@@ -117,25 +120,37 @@ contract TokenSwap {
         }
     }
 
-   function removeStake() public
+   function removeStake(uint256 value, uint index) public
     {
-        {
-            token1.transfer(msg.sender, stakes1[msg.sender]);
-            stakes1[msg.sender] = stakes1[msg.sender] -= stakes1[msg.sender];
+        if(index == 1){
+            stakes1[msg.sender] = stakes1[msg.sender] -= value;
             if(stakes1[msg.sender] == 0) removeStakeholder(msg.sender);
+            token1.transfer(msg.sender, value);
+            
         }
 
-        {
-            token2.transfer(msg.sender, stakes2[msg.sender]);
-            stakes2[msg.sender] = stakes2[msg.sender] -= stakes2[msg.sender];
+        if(index == 2){
+            stakes2[msg.sender] = stakes2[msg.sender] -= value;
             if(stakes2[msg.sender] == 0) removeStakeholder(msg.sender);
+            token2.transfer(msg.sender, value);
+            
         }
 
-        {
-            token3.transfer(msg.sender, stakes3[msg.sender]);
-            stakes3[msg.sender] = stakes3[msg.sender] -= (stakes3[msg.sender]);            
+        if(index == 3){
+            stakes3[msg.sender] = stakes3[msg.sender] -= value;            
             if(stakes3[msg.sender] == 0) removeStakeholder(msg.sender);
+            token3.transfer(msg.sender, value);
+            
         }
     }   
+
+    function changeRate (IERC20 token, uint256 newValue) public onlyOwner{
+       rates[token] = newValue; 
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
 
 }
