@@ -35,7 +35,6 @@ class Pool extends Component {
           stakes3: '0'
         };
         this.onChange1 = this.onChange1.bind(this);
-        this.onChange2 = this.onChange2.bind(this);
         this.withdrawStake = this.withdrawStake.bind(this);
       }
 
@@ -45,70 +44,10 @@ class Pool extends Component {
         if (e.target.value === '' || re.test(e.target.value)) {
            this.setState({value1: e.target.value})
         }
-        
-        if(this.state.token === "ETH" && this.state.token2 === "DAI") {
-          this.setState({value2: e.target.value/this.state.rate[0]*this.state.rate[1]}, 
-            () => {console.log(this.state.value2)}
-            )
-        }
-
-        if(this.state.token === "DAI" && this.state.token2 === "ETH") {
-          this.setState({value2: e.target.value/this.state.rate[1]*this.state.rate[0]}, 
-            () => {console.log(this.state.value2)}
-            )
-        }
-
-        if(this.state.token === "ETH" && this.state.token2 === "TSRD") {
-          this.setState({value2: e.target.value/this.state.rate[0]*this.state.rate[2]}, 
-            () => {console.log(this.state.value2)}
-            )
-        }
-
-        if(this.state.token === "TSRD" && this.state.token2 === "ETH") {
-          this.setState({value2: e.target.value/this.state.rate[2]*this.state.rate[0]}, 
-            () => {console.log(this.state.value2)}
-            )
-        }
-
-        if(this.state.token === "DAI" && this.state.token2 === "TSRD") {
-          this.setState({value2: e.target.value/this.state.rate[1]*this.state.rate[2]}, 
-            () => {console.log(this.state.value2)}
-            )
-        }
-
-        if(this.state.token === "TSRD" && this.state.token2 === "DAI") {
-          this.setState({value2: e.target.value/this.state.rate[2]*this.state.rate[1]}, 
-            () => {console.log(this.state.value2)}
-            )
-        }
-
-        if(this.state.token ===  this.state.token2 && this.state.token!=='Επιλέξτε νόμισμα') {
-          this.setState({value2: e.target.value}, 
-            () => {console.log(this.state.value2)}
-            )
-        }
       }
+
 
      
-
-     onChange2(e){
-      const re = /^[0-9]*([,.][0-9]*)?$/;
-      if (e.target.value === '' || re.test(e.target.value)) {
-         this.setState({value2: e.target.value})
-      }
-
-      if(this.state.token === "ETH" && this.state.token2 === "DAI") {
-        this.setState({value1: e.target.value*this.state.rate[0]/this.state.rate[1]}, 
-          () => {console.log(this.state.value2)}
-          )
-      }
-
-      if(this.state.token === "DAI" && this.state.token2 === "ETH") {
-        this.setState({value1: e.target.value*this.state.rate[1]/this.state.rate[0]}, 
-          () => {console.log(this.state.value2)}
-          )
-      }
-    }  
 
     change(token) {
       this.setState({token:token})
