@@ -1,5 +1,5 @@
 import web3 from './web3';
-const address = '0x1E80C6d4Da8aB43B26F91646aBbA356aB61D3703';
+const address = '0x968D4098663153b55aDC8f7d1b34836D9C08931F';
 const abi =
 [
 	{
@@ -32,6 +32,24 @@ const abi =
 			}
 		],
 		"name": "addStakeholder",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IERC20",
+				"name": "token",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "newValue",
+				"type": "uint256"
+			}
+		],
+		"name": "changeRate",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -98,7 +116,18 @@ const abi =
 		"type": "function"
 	},
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
 		"name": "removeStake",
 		"outputs": [],
 		"stateMutability": "nonpayable",

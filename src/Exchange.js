@@ -23,16 +23,20 @@ class Exchange extends Component {
           ethBalance: '0',
           value1: '',
           value2: '',
+          value3: '',
           token: 'Επιλέξτε νόμισμα',
           token2: 'Επιλέξτε νόμισμα',
+          token3: 'Επιλέξτε νόμισμα',
           rate: [, ,], //Μας δείχνει πόσα tokens παίρνει κάποιος με 1 eth (με την σειρά των tokens eth, dai, tsrd)
           selectedRate1: '',
           selectedRate2: '',
           firstAddress: '',
-          secondAddress: ''
+          secondAddress: '',
+          thirdAddress: ''
         };
         this.onChange1 = this.onChange1.bind(this);
         this.onChange2 = this.onChange2.bind(this);
+        this.onChange3 = this.onChange3.bind(this);
 
       }
 
@@ -151,6 +155,14 @@ class Exchange extends Component {
       }
     }  
 
+    onChange3(e){
+      
+      const re = /^[0-9]*([.][0-9]*)?$/;
+      if (e.target.value === '' || re.test(e.target.value)) {
+         this.setState({value3: e.target.value})
+      }
+    } 
+
     change(token) {
       this.setState({token:token})
     };
@@ -158,6 +170,10 @@ class Exchange extends Component {
     change2(token) {
       this.setState({token2:token})
     };
+
+    change3(token) {
+      this.setState({token3:token})
+    }
 
     changeRateUp(amount) {
       this.state.rate[0] = this.state.rate[0] + amount/100;
@@ -207,9 +223,39 @@ class Exchange extends Component {
             ).send({
               from:accounts[0]
             });
-          
+      }
+    }
 
-        
+
+    onclick2 = async () => {
+
+      
+      const accounts = await web3.eth.getAccounts();
+      this.setState ({account: accounts[0]});
+
+      
+      if(this.state.token3 ==='Token2') {this.setState({thirdAddress:'0x933b201c88C01Ae6D7b0BdAE777A91e7730BA73B'})}
+      if(this.state.token3 ==='Token3') {this.setState({thirdAddress:'0x669ec5e89DC20dfd428C0cBF459F1e0bBD4045d5'})}
+
+
+      if(this.state.token3 === 'Επιλέξτε νόμισμα') {
+        alert("Επιλέξτε νόμισμα")
+      }
+      else if(this.state.value3 === '' ) {
+        alert("Συμπληρώστε την νέα ισοτιμία.")
+      }
+   
+      else {
+        var answer = window.confirm("Θέλετε να αλλάξετε την ισοτιμία του "
+        + this.state.token3 +
+        " σε σχέση με το Token1 σε: " +
+        this.state.value3 + 
+        ";");
+        if (answer) {
+            _exchange.methods.changeRate(web3.utils.toChecksumAddress(this.state.thirdAddress), web3.utils.toWei(String(this.state.value3, 'ether'))).send({
+              from:accounts[0]
+            })
+          }
       }
     }
 
@@ -235,7 +281,6 @@ class Exchange extends Component {
                     style={{
                       width: 600,
                       height: 550,
-                     
                     }}
                   >
                     <Button 
@@ -366,11 +411,70 @@ class Exchange extends Component {
                         }}>Συναλλαγή</Button>
                       </div>
                   </Card>
+
+                  <Card
+                    style={{
+                      width: 600,
+                      height: 300,
+                      marginTop: 20,
+                      marginBottom: 20
+                    }}
+                    >
+                      <h4>Αλλαγή ισοτιμίας.</h4>
+                      <h6>Η ενέργεια επιτρέπεται μόνο από τον κάτοχο του συμβολαίου.</h6>
+                      <h6>Ορίστε την νέα ισοτιμία σε σχέση με το Token1:</h6>
+                      <div class="row align-items-center">
+                          <div class="col-sm">
+                            <input 
+                            name= 'input3'
+                            value={this.state.value3} 
+                            onChange={this.onChange3}
+                            placeholder="Νέα ισοτιμία."
+                            style={{
+                              margin: 20,
+                              borderRadius:20,
+                              height: 100,
+                              width: 300
+                            }} />
+                          </div>
+                          <div class="col-sm">
+                            <Dropdown>
+                              <Dropdown.Toggle 
+                              variant="success" 
+                              id="dropdown-basic"
+                              style={{
+                                width: 160
+                               }}>
+                              <text>{this.state.token3}</text>
+                              </Dropdown.Toggle>
+                              <Dropdown.Menu>
+                                <Dropdown.Item onSelect={()=> (this.setState({value2: ''}),
+                                  this.change3("Token2"))}>
+                                  <Icon name="Token2" size={25} /> Token2 </Dropdown.Item>
+                                <Dropdown.Item onSelect={()=> (this.setState({value2: ''}),
+                                  this.change3("Token3"))}>
+                                  <Icon name="Token3" size={25} /> Token3</Dropdown.Item>
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </div>
+                          <div class="col-sm">
+                          <div className="d-grid gap-2">
+                            <Button 
+                            onClick={this.onclick2}
+                            variant="warning" 
+                            size="md"
+                            style={{
+                              width: 400
+                            }}>Αλλαγή ισοτιμίας</Button>
+                          </div>
+                          </div>
+                        </div>
+
+                  </Card>
               </div>
             </main>
           </div>
         </div>
-      
     );
     }
 }

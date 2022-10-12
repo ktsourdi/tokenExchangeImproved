@@ -107,30 +107,80 @@ class Pool extends Component {
       else {
 
         const _stakes1 = await _exchange.methods.stakeOf(1, accounts[0]).call(); //καταθέσεις στο Token1
-        const _stakes2 = await _exchange.methods.stakeOf(2, accounts[0]).call(); //καταθέσεις στο Token1
-        const _stakes3 = await _exchange.methods.stakeOf(3, accounts[0]).call(); //καταθέσεις στο Token1
+        const _stakes2 = await _exchange.methods.stakeOf(2, accounts[0]).call(); //καταθέσεις στο Token2
+        const _stakes3 = await _exchange.methods.stakeOf(3, accounts[0]).call(); //καταθέσεις στο Token3
 
         this.setState({stakes1: _stakes1.toString()/1000000000000000000}); 
         this.setState({stakes2: _stakes2.toString()/1000000000000000000}); 
         this.setState({stakes3: _stakes3.toString()/1000000000000000000}); 
         
-        if(this.state.stakes1 === 0 && this.state.stakes2 === 0 && this.state.stakes3 === 0) 
-          {alert("Δεν έχετε υπόλοιπο στο pool.")}
-        else {
-          var answer = window.confirm("Θέλετε να κάνετε ανάληψη "
-          + this.state.stakes1 + 
-          " Token1 και " +
-          this.state.stakes2 +
-           " Token2 και " +
-           this.state.stakes3 +
-           " Token3;");
-          if (answer) {
-              _exchange.methods.removeStake().send({
-                from:accounts[0]
-              })
-            }
+        if(this.state.token === 'Επιλέξτε νόμισμα') {
+          alert("Επιλέξτε νόμισμα")
+        }
+        else if(this.state.value1 === '' ) {
+          alert("Συμπληρώστε ποσότητα.")
+        }
+        else if(this.state.stakes1 === 0 && this.state.stakes2 === 0 && this.state.stakes3 === 0) {
+          alert("Δεν έχετε υπόλοιπο στο pool.")
+        }
+        else if(this.state.token === 'Token1') {
+          if(this.state.stakes1 === 0) {
+            alert("Δεν έχετε καταθέσεις στο συγκεκριμένο νόμισμα.")
+          }
+          else if(this.state.stakes1 < this.state.value1) {
+            alert("Οι καταθέσεις σας στο συγκεκριμένο νόμισμα είναι: " + this.state.stakes1 + "\n" + "Προσπαθήστε ξανά με μικρότερο ποσό.")
+          }
           else {
-            
+            var answer = window.confirm("Θέλετε να κάνετε ανάληψη "
+            + this.state.value1 +
+            " Token1 από τα συνολικά " +
+            this.state.stakes1 + 
+            " που έχετε στο Pool;");
+            if (answer) {
+                _exchange.methods.removeStake(web3.utils.toWei(String(this.state.value1, 'ether')), 1).send({
+                  from:accounts[0]
+                })
+              }
+          }
+        }
+        else if(this.state.token === 'Token2') {
+          if(this.state.stakes2 === 0) {
+            alert("Δεν έχετε καταθέσεις στο συγκεκριμένο νόμισμα.")
+          }
+          else if(this.state.stakes2 < this.state.value1) {
+            alert("Οι καταθέσεις σας στο συγκεκριμένο νόμισμα είναι: " + this.state.stakes2 + "\n" + "Προσπαθήστε ξανά με μικρότερο ποσό.")
+          }
+          else {
+            var answer = window.confirm("Θέλετε να κάνετε ανάληψη "
+            + this.state.value1 +
+            " Token2 από τα συνολικά " +
+            this.state.stakes2 + 
+            " που έχετε στο Pool;");
+            if (answer) {
+                _exchange.methods.removeStake(web3.utils.toWei(String(this.state.value1, 'ether')), 2).send({
+                  from:accounts[0]
+                })
+              }
+            }
+        }
+        else if(this.state.token === 'Token3') {
+          if(this.state.stakes3 === 0) {
+            alert("Δεν έχετε καταθέσεις στο συγκεκριμένο νόμισμα.")
+          }
+          else if(this.state.stakes2 < this.state.value1) {
+            alert("Οι καταθέσεις σας στο συγκεκριμένο νόμισμα είναι: " + this.state.stakes2 + "\n" + "Προσπαθήστε ξανά με μικρότερο ποσό.")
+          }
+          else {
+            var answer = window.confirm("Θέλετε να κάνετε ανάληψη "
+            + this.state.value1 +
+            " Token3 από τα συνολικά " +
+            this.state.stakes3 + 
+            " που έχετε στο Pool;");
+            if (answer) {
+                _exchange.methods.removeStake(web3.utils.toWei(String(this.state.value1, 'ether')), 3).send({
+                  from:accounts[0]
+                })
+              }
           }
         }
       }
@@ -183,7 +233,7 @@ class Pool extends Component {
                         }}
                         color="textSecondary"
                       >
-                        Καταθέστε νομίσματα Eth και Dai!
+                        Συμπληρώστε ποσό και επιλέξτε ενέργεια κατάθεση ή ανάληψη.
                       </Typography>
                       <div class="form-group">
                       <div class="row align-items-center">
