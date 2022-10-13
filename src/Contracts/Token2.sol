@@ -13,23 +13,9 @@ contract Token {
         uint256 _value
     );
 
-    event Approval(
-        address indexed _owner,
-        address indexed _spender,
-        uint256 _value
-    );
 
-    event TokensSold(
-        address account,
-        address token,
-        uint amount,
-        uint rate
-    );
 
     mapping(address => uint256) public balanceOf;
-    mapping(address => mapping(address => uint256)) public allowance;
-
-    mapping(address => uint256) internal rewards;
 
 
     constructor() {
@@ -44,11 +30,6 @@ contract Token {
         return true;
     }
 
-    function approve(address _spender, uint256 _value) public returns (bool success) {
-        allowance[msg.sender][_spender] = _value;
-        emit Approval(msg.sender, _spender, _value);
-        return true;
-    }
 
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
         require(_value <= balanceOf[_from]);
@@ -57,20 +38,6 @@ contract Token {
         
         emit Transfer(_from, _to, _value);
         return true;
-    }
-
-    function buyToken(uint amount) public payable{
-        uint tokenAmount = amount;
-        
-        require(this.balanceOf(address(this)) >= tokenAmount);
-        this.transfer(msg.sender, tokenAmount);
-
-    }
-
-    function sellToken(uint _amount, uint etherAmount) public{
-        
-        this.transferFrom(msg.sender, address(this), _amount);
-        payable(msg.sender).transfer(etherAmount);
     }
 
 
